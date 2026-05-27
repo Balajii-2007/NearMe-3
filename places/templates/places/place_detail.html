@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ place.name }} – Places Around My House in Mysore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fdf6ec;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --muted: #666;
+            --accent: {{ place.color }};
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Sans 3', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; }
+
+        nav {
+            background: var(--text);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+        .brand { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; }
+        nav a { color: #bbb; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+        nav a:hover { color: white; }
+
+        .place-hero {
+            background: var(--accent);
+            color: white;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .place-hero::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.22); }
+        .place-hero .emoji-big {
+            font-size: 5rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0.75rem;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+        }
+        .place-hero h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; position: relative; z-index: 1; margin-bottom: 0.5rem; }
+        .place-hero .badges { position: relative; z-index: 1; display: flex; gap: 0.75rem; justify-content: center; margin-top: 0.75rem; flex-wrap: wrap; }
+        .badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 0.3rem 0.9rem; border-radius: 20px; font-size: 0.85rem; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .info-item {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 1.25rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border-bottom: 3px solid var(--accent);
+        }
+        .info-item .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem; }
+        .info-item .value { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+
+        .detail-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            border-top: 5px solid var(--accent);
+        }
+        .detail-card h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 1rem; color: var(--accent); }
+        .detail-card p { font-size: 1.05rem; line-height: 1.85; color: #333; }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .back-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+
+        footer { background: var(--text); color: #888; text-align: center; padding: 1.5rem; font-size: 0.85rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'places:home' %}" class="brand">📍 My Mysore</a>
+    <a href="{% url 'places:home' %}">← Back to Map</a>
+</nav>
+
+<div class="place-hero">
+    <span class="emoji-big">{{ place.icon }}</span>
+    <h1>{{ place.name }}</h1>
+    <div class="badges">
+        <span class="badge">📂 {{ place.category }}</span>
+        <span class="badge">📏 {{ place.distance }} from home</span>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="info-grid">
+        <div class="info-item">
+            <div class="label">Category</div>
+            <div class="value">{{ place.category }}</div>
+        </div>
+        <div class="info-item">
+            <div class="label">Distance</div>
+            <div class="value">{{ place.distance }}</div>
+        </div>
+        <div class="info-item">
+            <div class="label">Location</div>
+            <div class="value">Mysore</div>
+        </div>
+        <div class="info-item">
+            <div class="label">State</div>
+            <div class="value">Karnataka</div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h2>About {{ place.name }}</h2>
+        <p>{{ place.description }}</p>
+    </div>
+
+    <a class="back-btn" href="{% url 'places:home' %}">← View All Places on Map</a>
+
+</div>
+
+<footer>
+    Ex 03 – Imagemap Project &nbsp;|&nbsp; Mysore, Karnataka &nbsp;|&nbsp; Django + HTML Image Maps
+</footer>
+
+</body>
+</html>

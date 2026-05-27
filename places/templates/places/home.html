@@ -1,0 +1,306 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Places Around My House – Mysore</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fdf6ec;
+            --card: #ffffff;
+            --text: #1a1a2e;
+            --muted: #666;
+            --accent: #d4a017;
+            --border: #e8ddd0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Source Sans 3', sans-serif; background-color: var(--bg); color: var(--text); }
+
+        nav {
+            background: var(--text);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+        .brand { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: white; text-decoration: none; }
+        nav a { color: #bbb; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+        nav a:hover { color: white; }
+
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2c1f05 100%);
+            color: white;
+            text-align: center;
+            padding: 3.5rem 2rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '🏰';
+            position: absolute;
+            font-size: 12rem;
+            opacity: 0.05;
+            top: -1rem;
+            right: 5%;
+        }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 0.5rem; }
+        .hero p { color: #f0d080; font-size: 1.1rem; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 50px; height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .map-section {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            margin-bottom: 2.5rem;
+        }
+
+        .map-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 1.5rem auto 0;
+            display: block;
+        }
+        .map-wrapper img { width: 100%; border-radius: 8px; display: block; }
+
+        .hotspot-overlay {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            text-decoration: none;
+            animation: pulse 2.5s infinite;
+        }
+        .hotspot-overlay:hover { transform: scale(1.2); animation: none; box-shadow: 0 0 0 6px rgba(255,255,255,0.4); }
+        @keyframes pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+            70%  { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
+
+        .map-tooltip {
+            display: none;
+            position: fixed;
+            background: rgba(26,26,46,0.92);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            pointer-events: none;
+            z-index: 999;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+        .place-card {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 4px solid var(--c);
+        }
+        .place-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .place-card .emoji { font-size: 2.4rem; display: block; margin-bottom: 0.6rem; }
+        .place-card h3 { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .place-card .meta { font-size: 0.78rem; color: var(--muted); }
+        .place-card .dist {
+            display: inline-block;
+            margin-top: 0.5rem;
+            background: #f5ece0;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .instructions {
+            background: #fffbf2;
+            border-left: 4px solid #d4a017;
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        footer { background: var(--text); color: #888; text-align: center; padding: 1.5rem; font-size: 0.85rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <span class="brand">📍 My Mysore</span>
+    {% for place in places %}
+    <a href="{% url 'places:place_detail' place.slug %}">{{ place.icon }} {{ place.name }}</a>
+    {% endfor %}
+</nav>
+
+<div class="hero">
+    <h1>Places Around My House</h1>
+    <p>Mysore, Karnataka — Interactive Neighbourhood Map</p>
+</div>
+
+<div class="container">
+
+    <div class="instructions">
+        💡 <strong>How to use:</strong> Click on any glowing marker on the map below, or use the cards to explore each place around my house in Mysore.
+    </div>
+
+    <div class="map-section">
+        <div class="section-title">Interactive Neighbourhood Map — Mysore</div>
+
+        <div class="map-wrapper" id="mapWrapper">
+            {% static 'places/images/neighbourhood_map.png' as default_map %}
+            <!--
+                REPLACE THIS IMAGE with your Google Maps screenshot of Mysore.
+                Save it as: places/static/places/images/neighbourhood_map.png  (800 × 500 px)
+                Then go to http://image-map.net, upload the image, draw circles over each location,
+                and replace the <area> coords below with the ones generated by image-map.net
+            -->
+            <img
+                src="{{ mysore_image_url|default:default_map }}"
+                alt="Neighbourhood Map around my house in Mysore"
+                usemap="#mysoreMap"
+                id="mapImg"
+                onerror="this.onerror=null; this.src='https://placehold.co/800x500/1a1a2e/f0d080?text=Replace+with+your+Mysore+Google+Maps+Screenshot';"
+                style="width:100%; border-radius:8px;"
+            >
+
+            <!--
+                IMAGE MAP — Update coords after using http://image-map.net
+                These default coords are for an 800×500 image.
+                Replace <area> tags with your generated ones from image-map.net
+            -->
+            <map name="mysoreMap">
+                <!-- 🏰 Mysore Palace (centre-left) -->
+                <area shape="circle" coords="210,180,35"
+                    href="{% url 'places:place_detail' 'mysore-palace' %}"
+                    alt="Mysore Palace" title="Mysore Palace – 1.2 km">
+
+                <!-- ⛰️ Chamundi Hills (top-right) -->
+                <area shape="circle" coords="610,130,35"
+                    href="{% url 'places:place_detail' 'chamundi-hills' %}"
+                    alt="Chamundi Hills" title="Chamundi Hills – 3.0 km">
+
+                <!-- 🌼 Devaraja Market (centre) -->
+                <area shape="circle" coords="400,255,38"
+                    href="{% url 'places:place_detail' 'devaraja-market' %}"
+                    alt="Devaraja Market" title="Devaraja Market – 0.8 km">
+
+                <!-- 🏥 JSS Hospital (bottom-left) -->
+                <area shape="circle" coords="185,390,35"
+                    href="{% url 'places:place_detail' 'ksrtc-hospital' %}"
+                    alt="JSS Hospital" title="JSS Hospital – 1.0 km">
+
+                <!-- 🌿 Brindavan Gardens (bottom-right) -->
+                <area shape="circle" coords="625,390,35"
+                    href="{% url 'places:place_detail' 'brindavan-gardens' %}"
+                    alt="Brindavan Gardens" title="Brindavan Gardens – 2.0 km">
+            </map>
+
+            <!-- Visual hotspot overlays -->
+            <a class="hotspot-overlay" href="{% url 'places:place_detail' 'mysore-palace' %}"
+               style="background:rgba(212,160,23,0.88); width:52px; height:52px;
+                      left:calc(210/800*100% - 26px); top:calc(180/500*100% - 26px);"
+               title="Mysore Palace">🏰</a>
+
+            <a class="hotspot-overlay" href="{% url 'places:place_detail' 'chamundi-hills' %}"
+               style="background:rgba(192,57,43,0.88); width:52px; height:52px;
+                      left:calc(610/800*100% - 26px); top:calc(130/500*100% - 26px);"
+               title="Chamundi Hills">⛰️</a>
+
+            <a class="hotspot-overlay" href="{% url 'places:place_detail' 'devaraja-market' %}"
+               style="background:rgba(230,126,34,0.88); width:56px; height:56px;
+                      left:calc(400/800*100% - 28px); top:calc(255/500*100% - 28px);"
+               title="Devaraja Market">🌼</a>
+
+            <a class="hotspot-overlay" href="{% url 'places:place_detail' 'ksrtc-hospital' %}"
+               style="background:rgba(26,188,156,0.88); width:52px; height:52px;
+                      left:calc(185/800*100% - 26px); top:calc(390/500*100% - 26px);"
+               title="JSS Hospital">🏥</a>
+
+            <a class="hotspot-overlay" href="{% url 'places:place_detail' 'brindavan-gardens' %}"
+               style="background:rgba(39,174,96,0.88); width:52px; height:52px;
+                      left:calc(625/800*100% - 26px); top:calc(390/500*100% - 26px);"
+               title="Brindavan Gardens">🌿</a>
+        </div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="section-title">All Locations</div>
+    <div class="places-grid">
+        {% for place in places %}
+        <a class="place-card" href="{% url 'places:place_detail' place.slug %}" style="--c:{{ place.color }};">
+            <span class="emoji">{{ place.icon }}</span>
+            <h3>{{ place.name }}</h3>
+            <div class="meta">{{ place.category }}</div>
+            <span class="dist">{{ place.distance }}</span>
+        </a>
+        {% endfor %}
+    </div>
+
+</div>
+
+<footer>
+    Ex 03 – Imagemap Project &nbsp;|&nbsp; Mysore, Karnataka &nbsp;|&nbsp; Django + HTML Image Maps
+</footer>
+
+<div class="map-tooltip" id="tooltip"></div>
+
+<script>
+    const areas = document.querySelectorAll('map area');
+    const tooltip = document.getElementById('tooltip');
+    areas.forEach(area => {
+        area.addEventListener('mousemove', (e) => {
+            tooltip.style.display = 'block';
+            tooltip.textContent = area.getAttribute('title');
+            tooltip.style.left = (e.clientX + 12) + 'px';
+            tooltip.style.top  = (e.clientY + 12) + 'px';
+        });
+        area.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+    });
+</script>
+
+</body>
+</html>
