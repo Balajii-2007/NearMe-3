@@ -1,7 +1,42 @@
-# Ex 03 – Imagemap Project
+# Ex03 Places Around Me
+
+## Date:
+
+## AIM
+To develop a website to display details about the places around my house.
+
+## DESIGN STEPS
+
+### STEP 1
+Create a Django admin interface.
+
+### STEP 2
+Download your city map from Google.
+
+### STEP 3
+Using `<map>` tag name the map.
+
+### STEP 4
+Create clickable regions in the image using `<area>` tag.
+
+### STEP 5
+Write HTML programs for all the regions identified.
+
+### STEP 6
+Execute the programs and publish them.
+
+## CODE
+
+## OUTPUT
+
+The program for implementing image maps using HTML is executed successfully.
+
+## Project Summary
+
 **Mysore, Karnataka Neighbourhood Map**
 
 ## Project Structure
+
 ```
 imagemap_project/
 ├── manage.py
@@ -37,15 +72,15 @@ Open: http://127.0.0.1:8000
 
 ## Adding Your Google Maps Screenshot
 
-1. Open Google Maps → navigate to your house area in Mysore
-2. Screenshot the area at **800 × 500 px**
-3. Save as `places/static/places/images/neighbourhood_map.png`
-4. Go to **http://image-map.net** → upload the image
-5. Draw circles over each of the 5 locations
-6. Copy the generated `<area>` tags
-7. Open `places/templates/places/home.html`
-8. Replace the `<area>` tags inside `<map name="mysoreMap">` with your generated ones
-9. Also adjust the hotspot overlay `left:` and `top:` percentages to match
+1. Open Google Maps and navigate to your house area in Mysore.
+2. Screenshot the area at 800 x 500 px.
+3. Save it as `places/static/places/images/neighbourhood_map.png`.
+4. Go to http://image-map.net and upload the image.
+5. Draw circles over each of the 5 locations.
+6. Copy the generated `<area>` tags.
+7. Open `places/templates/places/home.html`.
+8. Replace the `<area>` tags inside `<map name="mysoreMap">` with your generated ones.
+9. Adjust the hotspot overlay `left:` and `top:` percentages to match.
 
 ## 5 Locations Covered (Mysore)
 
