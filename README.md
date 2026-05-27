@@ -69,6 +69,7 @@ place_detail.html
 ```
 
 # OUTPUT
+<img width="1582" height="827" alt="image" src="https://github.com/user-attachments/assets/64f05ea2-86fa-4748-8c9d-5bb304117b7f" />
 <img width="1894" height="968" alt="image" src="https://github.com/user-attachments/assets/bc437af9-7a7d-4eff-857b-0dc9a6f0ba6a" />
 <img width="1893" height="953" alt="image" src="https://github.com/user-attachments/assets/1b38f9c4-07f3-43be-9141-fd53b49bf9b5" />
 <img width="1890" height="971" alt="image" src="https://github.com/user-attachments/assets/a671d668-af72-498f-938d-ed57967ec1ae" />
