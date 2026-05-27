@@ -1,5 +1,5 @@
-# Ex04 Places Around Me
-# Date:08-10-2025
+# Ex03 NEAR ME
+# Date:
 # AIM
 To develop a website to display details about the places around my house.
 
@@ -69,7 +69,12 @@ place_detail.html
 ```
 
 # OUTPUT
-The home page displays a Google Maps-based imagemap with clickable regions for the listed places.
+<img width="1894" height="968" alt="image" src="https://github.com/user-attachments/assets/bc437af9-7a7d-4eff-857b-0dc9a6f0ba6a" />
+<img width="1893" height="953" alt="image" src="https://github.com/user-attachments/assets/1b38f9c4-07f3-43be-9141-fd53b49bf9b5" />
+<img width="1890" height="971" alt="image" src="https://github.com/user-attachments/assets/a671d668-af72-498f-938d-ed57967ec1ae" />
+
+
+
 
 # RESULT
 The program for implementing image maps using HTML is executed successfully.
